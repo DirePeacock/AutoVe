@@ -12,6 +12,7 @@ pipeline{
                 sh 'npm install'
               } 
            }
+        }
         stage('Building image') {
             steps{
                 script {
@@ -29,10 +30,9 @@ pipeline{
                 } 
            }
            stage('Deploying into k8s'){
-            steps{
-                sh 'kubectl apply -f deployment.yml' 
-            }
-           }   
-        }
+              steps{
+                  sh 'kubectl apply -f deployment.yml' 
+              }
+           }
     }
 }
