@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": 
+	{
+		"commentPrefix": "\"\"\"",
+		"doxdocgen.c.commentPrefix": " *",
+		"doxdocgen.c.firstLine": "\"\"",
+		"mocha.enabled": true
+	}
+}
