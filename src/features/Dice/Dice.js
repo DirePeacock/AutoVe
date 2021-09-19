@@ -1,7 +1,7 @@
 
 //import * as Parser from './CommandParser.js';
-let FULL_REGEX = new RegExp(/[0-9]+d[0-9]+.*/);
-let BASE_REGEX = new RegExp(/[0-9]+d[0-9]+/);
+let FULL_REGEX = new RegExp(/[0-9]*d[0-9]+.*/);
+let BASE_REGEX = new RegExp(/[0-9]*d[0-9]+/);
 
 
 class  DiceFunc  {
@@ -31,11 +31,11 @@ class  DiceFunc  {
         let average = 3.5
         var split_base =  base_matches[0].split('d')
         
-        if(split_base.length >1) {
+        if(split_base.length >1 && split_base[0] !== '') {
             rolls = parseInt(split_base[0])
             size = parseInt(split_base[1])
         } else {
-            size = parseInt(split_base[0])
+            size = parseInt(split_base[1])
         }
         let func = Roll
         average = (0.5+ (1.0 * size / 2))
@@ -59,19 +59,11 @@ class  DiceFunc  {
 } ;
 
 function Roll(size=6) {
-    retval = Math.ceil(Math.random()*size);
+    var retval = Math.ceil(Math.random()*size);
     //#console.log(`rolling a ${size} for a ${retval}`)
     return retval
 }
 
-//  function RollXdY(X, Y) {
-//     var retval =0;
-//     for(let i =0; i<X; i++)
-//     {
-//         retval += Roll(Y);
-//     }
-//     return retval;
-// }
  
 // https://hackernoon.com/playing-around-with-your-standard-run-of-the-mill-javascript-decorator-example-28d0445307e1
 // borrowing from @jlowery2663
@@ -84,29 +76,33 @@ function getParamNames(func) {
     result = [];
   return result;
 }
-
+function getParams(fn, args)
+{
+    const paramNames = getParamNames(fn)
+    const params = paramNames.reduce((obj, pn, i) => {
+        obj[pn] = args[i];
+        return obj;}, {} )
+    return params
+}
 const multiple_roll_decorator = function(fn, avg, rolls) {
-    // damn is this even something to decorate?
     // """given XdY, if you roll a number less than or equal to reroll_loe_num, you must use the lower"""
+    // is this even something to decorate?
     if (typeof fn === 'function')
     {
         let average = avg * rolls
         let func = function(...args){
             try {
                 let rv = 0
+                let params = getParams(fn, args) //this may not be needed everywheres
                 
-                const paramNames = getParamNames(fn)
-                const params = paramNames.reduce((obj, pn, i) => {
-                    obj[pn] = args[i];
-                    return obj;}, {} )
-
                 for(let i =0; i< rolls; i++) {
-                    rv += fn(params.size)
+                    rv += fn(...args)
+                    // rv += fn(params.size)
                 }
                 return rv
 
             } catch(err) {
-                console.error(err);
+                console.warn(err);
             }
         };
         let return_dict = {func, average}
@@ -119,7 +115,7 @@ const multiple_roll_decorator = function(fn, avg, rolls) {
 }
 
 const reroll_below_decorator = function(fn, reroll_loe_num) {
-    // """given XdY, if you roll a number less than or equal to reroll_loe_num, you must use the lower"""
+    // """given XdY, if you roll a number less than or equal to reroll_loe_num, you must use the newer one"""
     if (typeof fn === 'function')
     {
         let new_fn = function(...args){
@@ -127,12 +123,12 @@ const reroll_below_decorator = function(fn, reroll_loe_num) {
                 // console.log('Running function: ', fn.name)
                 // console.log(`args: ${args}`)
                 let rv = fn(...args)
+                if (rv <= reroll_loe_num)
+                {
+                    rv = fn(...args)
+                }
                 
-                const paramNames = getParamNames(fn)
-                const params = paramNames.reduce((obj, pn, i) => {
-                    obj[pn] = args[i];
-                    return obj;}, {} )
-                // console.log(`${fn.name}(${JSON.stringify(params)}) = ${rv}`)
+                
                 return rv
             } catch(err) {
                 console.warn(err);
@@ -151,10 +147,16 @@ function cmdRoll(cmd_string) {
     return myfuncobj.eval()
         
 }
+function validate(cmd_str)
+{
+  return FULL_REGEX.test(cmd_str)   
+}
 
 
 module.exports.DiceFunc = DiceFunc;
 module.exports.cmdRoll = cmdRoll;
+module.exports.validate = validate;
+
 // wrapped_roll = reroll_below_decorator(RollXdY);
 // let thing = wrapped_roll(1,6);
 // console.log('hey', thing);

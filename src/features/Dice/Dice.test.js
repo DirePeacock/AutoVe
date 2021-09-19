@@ -7,15 +7,25 @@ describe("dice class", () => {
         let myfuncobj = new DiceFunc.DiceFunc(funcstr);
         var num = myfuncobj.eval()
         console.log(`\"${funcstr}\" = ${num}`)
-        let inrange = (num <= size ) && (num >= 1)
-        expect(inrange).toBe(true);
+        expect(num).toBeGreaterThanOrEqual(1)
+        expect(num).toBeLessThanOrEqual(size)
     });
     test.each(dice_sizes)('roll few dice', (size) => {
-        var funcstr = `2d${size}`
+        var numDice = 2
+        var funcstr = `${numDice}d${size}`
         let myfuncobj = new DiceFunc.DiceFunc(funcstr);
         var num = myfuncobj.eval()
         console.log(`\"${funcstr}\" = ${num}`)
-        let inrange = (num <= size*2 ) && (num >= 2)
-        expect(inrange).toBe(true);
+        expect(num).toBeGreaterThanOrEqual(numDice)
+        expect(num).toBeLessThanOrEqual(size*numDice)
+    });
+    test.each(dice_sizes)('roll dx', (size) => {
+        
+        var funcstr = `d${size}`
+        let myfuncobj = new DiceFunc.DiceFunc(funcstr);
+        var num = myfuncobj.eval()
+        console.log(`\"${funcstr}\" = ${num}`)
+        expect(num).toBeGreaterThanOrEqual(1)
+        expect(num).toBeLessThanOrEqual(size)
     });
 });

@@ -1,10 +1,11 @@
 import { configureStore, combineReducers} from '@reduxjs/toolkit';
-import CLIReducer from '../features/CLI/CLISlice';
-
-const 
-export default configureStore({
-  //const rootReducer
+import actionSlice from '../features/action/slice';
+import { actorSlice } from '../features/actor/slice';
+import { invItemSlice } from '../features/InvItem/slice';
+export default configureStore({  
   reducer: {
-    number: CLIReducer,
+    action: actionSlice,
+    actors: actorSlice.reducer,
+    invItems: invItemSlice.reducer
   },
 });

@@ -1,0 +1,8 @@
+.actor {
+    border: 2px solid transparent;
+    background-color: rgba(112, 0, 182, 0.05);
+    border: 2px solid rgba(12, 0, 18, 0.1);
+    border-radius: 2px; 
+    margin: 2%;
+  }
+  
