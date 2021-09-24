@@ -1,0 +1,39 @@
+{
+    "actor": [
+        {
+            "actor_id": 0,
+            "actor_name": "Zyz"
+        },
+        {
+            "actor_id": 1,
+            "actor_name": "Levee"
+        }
+    ],
+    "inv_item": [
+        {
+            "inv_item_id": 0,
+            "inv_item_name": "greataxe",
+            "inv_item_dmg_dice_func": "1d12"
+        },
+        {
+            "inv_item_id": 1,
+            "inv_item_name": "glaive",
+            "inv_item_dmg_dice_func": "1d10"
+        }
+    ],
+    "actor_inv_item_mapping": [
+        {
+            "actor_id": 0,
+            "inv_item_id": 0
+        },
+        {
+            "actor_id": 1,
+            "inv_item_id": 1
+        },
+        {
+            "actor_id": 1,
+            "inv_item_id": 0
+        }        
+    ],
+    "memes":[{"ayy": "lmao"}]
+}
